@@ -1,0 +1,26 @@
+The Gateworks System Controller provides a host of features which can generate
+interrupts.  The GSC has a single active-low interrupt to the ARM host that it
+asserts when a specific interrupt condition occurs that is enabled.
+
+The User Pushbutton is controlled by the GSC and its status is available on
+gpio100 or gpio108 depending on board model.  In some cases one might want to
+detect a pushbutton 'held' for a certain amount of time, which would generate
+a GPIO change on the press, but no release.  In this situation the gscd
+can emit hotplug events for GPIO's that don't change in a certain amount of
+time.
+
+If all your interested in is the user pushbutton, invoke gscd as:
+
+# i2c-bus 0, host interrupt gpio1, pushbutton gpio100
+gscd 0 1 --pb_gpio 100
+
+If you want to see nochange events (ie see if a button is 'held' down for
+a period of time) specify the nochange_period for the time you want to catch:
+# 6 second time
+gscd 0 1 --pb_gpio 100 --nochange_period 6
+
+If you have for example an external DIO hooked to a PB and you want to monitor
+that for 'held' events, pass in its bit in nochage_mask and specify a period
+to emit an event.  For example, gpio101:
+# monitor gpio3 (bit2 = 0x04) and emit nochange events every 6 seconds
+gscd 0 1 --nochange_mask 0x04 --nochange_period 6

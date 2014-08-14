@@ -1,0 +1,15 @@
+#!/bin/sh
+
+uci -q show system.@gsc[0] || {
+	uci add system gsc
+	# the following are determined at runtime based on board model
+	#uci set system.@gsc[0].i2c_bus=0
+	#uci set system.@gsc[0].gsc_irq=1
+	#uci set system.@gsc[0].pb_gpio=100
+
+	uci set system.@gsc[0].subsystem=button
+	uci set system.@gsc[0].pb_name=USER_PB
+	uci set system.@gsc[0].nochange_period=2
+
+	uci commit
+}

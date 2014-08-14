@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Environment
+#   BUTTON - erase|tamper|<button-name>|<gpio-name
+#   ACTION - action type (pressed|released|held|high|low|still_high|still_low)
+#   SEEN   - seconds since last event of this type
+#   COUNT  - number of successive events within 2 second period
+ 
+# redirect output to console
+exec >/dev/console
+
+# Debugging
+#echo "button=$BUTTON action=$ACTION count=$COUNT seen=$SEEN"
+
+[ "$BUTTON" == "USER_PB" ] && {
+	case "$ACTION" in
+		held)
+			[ "$SEEN" -ge 2 ] && echo "$0: Button held for $SEEN secs"
+			;;
+		released)
+			[ "$COUNT" -gt 4 ] && {
+				# determine number of successive press-and-release events
+				COUNT=$((COUNT+1))
+				COUNT=$((COUNT/2))
+				echo "$0: Button quick pressed-and-release $COUNT times"
+			}
+			;;
+	esac
+}

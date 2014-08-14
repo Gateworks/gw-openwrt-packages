@@ -1,0 +1,62 @@
+<script type="text/javascript">//<![CDATA[
+
+	var iwxhr_hw = new XHR();
+
+	var update_status_hw = function() {
+		iwxhr_hw.get('<%=luci.dispatcher.build_url("admin/status/hardware")%>', { status: 1 },
+
+			function(x, info)
+			{
+				var e;
+
+				e = document.getElementById('temp');
+				e.innerHTML = String.format('%.02fC', info.temp / 10);
+					
+				e = document.getElementById('vin');
+				e.innerHTML = String.format('%.02fV', info.vin / 1000);
+				
+				for (var i = 1; i <= 12; i++) {
+					var id = 'in' + i;
+					if (info.input_volt[i-1] == 0xffffff || !info.input_name[i-1])
+					{
+						document.getElementById(id).style.display = 'none';
+					} else {
+						document.getElementById(id).style.display = 'table-row';
+						if (i == 12) {
+							document.getElementById(id + '_name').innerHTML = "System Current";
+							document.getElementById(id + '_v').innerHTML = String.format('%.02fA', info.input_volt[i-1] / 1000);
+						} else {
+							document.getElementById(id + '_name').innerHTML = String.format('%s Voltage', info.input_name[i-1]);
+							document.getElementById(id + '_v').innerHTML = String.format('%.02fV', info.input_volt[i-1] / 1000);
+						}
+					}
+				}
+				
+				window.setTimeout(update_status_hw, 5000);
+			}
+		)
+	};
+
+	update_status_hw();
+//]]></script>
+
+<fieldset class="cbi-section">
+	<legend><%:Hardware%></legend>
+
+	<table width="100%" cellspacing="10">
+		<tr><td width="33%"><%:Temperature%></td><td id="temp">-</td></tr>
+		<tr><td width="33%"><%:Input Voltage%></td><td id="vin">-</td></tr>
+		<tr id="in1" style="display:none"><td width="33%" id="in1_name">-</td><td id="in1_v">-</td></tr>
+		<tr id="in2" style="display:none"><td width="33%" id="in2_name">-</td><td id="in2_v">-</td></tr>
+		<tr id="in3" style="display:none"><td width="33%" id="in3_name">-</td><td id="in3_v">-</td></tr>
+		<tr id="in4" style="display:none"><td width="33%" id="in4_name">-</td><td id="in4_v">-</td></tr>
+		<tr id="in5" style="display:none"><td width="33%" id="in5_name">-</td><td id="in5_v">-</td></tr>
+		<tr id="in6" style="display:none"><td width="33%" id="in6_name">-</td><td id="in6_v">-</td></tr>
+		<tr id="in7" style="display:none"><td width="33%" id="in7_name">-</td><td id="in7_v">-</td></tr>
+		<tr id="in8" style="display:none"><td width="33%" id="in8_name">-</td><td id="in8_v">-</td></tr>
+		<tr id="in9" style="display:none"><td width="33%" id="in9_name">-</td><td id="in9_v">-</td></tr>
+		<tr id="in10" style="display:none"><td width="33%" id="in10_name">-</td><td id="in10_v">-</td></tr>
+		<tr id="in11" style="display:none"><td width="33%" id="in11_name">-</td><td id="in11_v">-</td></tr>
+		<tr id="in12" style="display:none"><td width="33%" id="in12_name">-</td><td id="in12_v">-</td></tr>
+	</table>
+</fieldset>
