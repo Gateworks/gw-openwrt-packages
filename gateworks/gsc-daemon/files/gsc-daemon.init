@@ -13,6 +13,13 @@ gsc_config() {
 	board=$(i2cdump -f -y -r 48-63 0 0x51 2>/dev/null| tail -1 | cut -c56- | tr -d \.)
 	i2c_bus=0
 	case "$board" in
+		# Ventana Product Family
+		GW5*)
+			gsc_irq=4
+			pb_gpio=240
+			# Ventana's GPIO's aren't exported, so try here
+			(echo $gsc_irq > /sys/class/gpio/export)
+			;;
 		# Laguna Product Family
 		GW2391*|GW2388*|GW2387*|GW2386*)
 			gsc_irq=1

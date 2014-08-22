@@ -1,5 +1,4 @@
-// vi: set ai ts=2 sts=2 sw=2 et cin:
-/** 
+/**
  * @file gscd.c
  * @brief Gateworks System Controller deamon
  * switches and scripts
@@ -52,24 +51,24 @@
 /*
  * GSC Address/Register/Bit definitions (see http://trac.gateworks.com/wiki/gsc)
  */
-#define PCA_I2C_ADDR      0x23 // PCA9555 7-bit address
-#define GSC_I2C_ADDR      0x20 // GSC 7-bit address
+#define PCA_I2C_ADDR      0x23 /* PCA9555 7-bit address */
+#define GSC_I2C_ADDR      0x20 /* GSC 7-bit address */
 
-#define GSC_INT_SOURCE    10   // interrupt source reg
-#define GSC_INT_ENABLE    11   // interrupt enable reg
+#define GSC_INT_SOURCE    10   /* interrupt source reg */
+#define GSC_INT_ENABLE    11   /* interrupt enable reg */
 
 /* interrupt source/enable bits */
-#define GSC_INT_PB        0    // pushbutton short press-release
-#define GSC_INT_ERASE     1    // EEPROM erase complete
-#define GSC_INT_GPIO      4    // GPIO
-#define GSC_INT_TAMPER    5    // Tamper event
-#define GSC_INT_PB_LONG   7    // pushbutton long hold event
+#define GSC_INT_PB        0    /* pushbutton short press-release */
+#define GSC_INT_ERASE     1    /* EEPROM erase complete */
+#define GSC_INT_GPIO      4    /* GPIO */
+#define GSC_INT_TAMPER    5    /* Tamper event */
+#define GSC_INT_PB_LONG   7    /* pushbutton long hold event */
 
 /* PCA955x registers */
-#define PCA_INP0          0    // PORT0 input
-#define PCA_DIR0          6    // PORT0 config
-#define PCA_INP1          1    // PORT1 input
-#define PCA_DIR1          7    // PORT1 config
+#define PCA_INP0          0    /* PORT0 input */
+#define PCA_DIR0          6    /* PORT0 config */
+#define PCA_INP1          1    /* PORT1 input */
+#define PCA_DIR1          7    /* PORT1 config */
 
 static int debug = 0;
 
@@ -84,9 +83,9 @@ unsigned short get_gpio(int fd)
       perror("I2C_SLAVE_FORCE");
       exit(-3);
   }
-  res = i2c_smbus_read_byte_data(fd, PCA_INP0) & 
+  res = i2c_smbus_read_byte_data(fd, PCA_INP0) &
         i2c_smbus_read_byte_data(fd, PCA_DIR0);
-  res |= (i2c_smbus_read_byte_data(fd, PCA_INP1) & 
+  res |= (i2c_smbus_read_byte_data(fd, PCA_INP1) &
           i2c_smbus_read_byte_data(fd, PCA_DIR1)) << 8;
 
   return res;
@@ -113,7 +112,7 @@ hotplug_event(char* type, char *envp[])
 {
   pid_t pid;
   char *argv[] = { "/sbin/hotplug-call", type, (char *) 0};
-  
+
   DPRINTF("%s: %s %s %s %s %s\n", __func__, type, envp[0], envp[1], envp[2], envp[3]);
   if ((pid = fork()) == 0) {
     int ret = execve(argv[0], argv, envp);
@@ -147,27 +146,27 @@ void usage(const char* app)
 int main(int argc, char** argv)
 {
   int i2c_fd, gpio_fd;
-  time_t event_time;          // track event time delta
+  time_t event_time;          /* track event time delta */
   time_t irq_time[8];
   time_t gpio_time[16];
-  int gpio_count[16];         // track gpio counts
-  unsigned short last_gpio;   // track gpio states
+  int gpio_count[16];         /* track gpio counts */
+  unsigned short last_gpio;   /* track gpio states */
   unsigned short gpio;
-  struct pollfd fdset[1];     // for poll(2)
-  char buf[256];              // general purpose buffer
+  struct pollfd fdset[1];     /* for poll(2) */
+  char buf[256];              /* general purpose buffer */
   char *env[5];
   int i, c;
 
-  // options
-  int i2c_bus = 0;            // i2c bus device (typically /dev/i2c0)
-  int gsc_irq = -1;           // host interrupt gpio
-  int pb_gpio = -1;           // pushbutton gpio
-  int nochange_mask = 0;      // bitmask of gpios we eimt 'nochange' events for
-  char *pb_name = "USER_PB";  // pushbutton name
-  char *subsystem= "button";  // hotplug subsystem;
-  int timeout = 0;            // timeout in seconds (period of nochange events)
+  /* options */
+  int i2c_bus = 0;            /* i2c bus device (typically /dev/i2c0) */
+  int gsc_irq = -1;           /* host interrupt gpio */
+  int pb_gpio = -1;           /* pushbutton gpio */
+  int nochange_mask = 0;      /* bitmask of gpios we eimt 'nochange' events for */
+  char *pb_name = "USER_PB";  /* pushbutton name */
+  char *subsystem= "button";  /* hotplug subsystem; */
+  int timeout = 0;            /* timeout in seconds (period of nochange events) */
 
-  // parse commandline options
+  /* parse commandline options */
   while (1) {
     int optind = 0;
     static struct option long_opts[] = {
@@ -179,23 +178,23 @@ int main(int argc, char** argv)
       {"nochange_period", 1, 0, 0},
       {0, 0, 0, 0}
     };
-  
+
     c = getopt_long(argc, argv, "dh?", long_opts, &optind);
     if (c == -1)
       break;
-  
+
     switch (c) {
     case 0:
       if (strcmp("pb_gpio", long_opts[optind].name) == 0) {
         pb_gpio = atoi(optarg);
       } else if (strcmp("pb_name", long_opts[optind].name) == 0) {
-        pb_name = optarg; 
+        pb_name = optarg;
       } else if (strcmp("nochange_mask", long_opts[optind].name) == 0) {
-        nochange_mask = strtoul(optarg, NULL, 0); 
+        nochange_mask = strtoul(optarg, NULL, 0);
       } else if (strcmp("nochange_period", long_opts[optind].name) == 0) {
-        timeout = atoi(optarg); 
+        timeout = atoi(optarg);
       } else if (strcmp("subsystem", long_opts[optind].name) == 0) {
-        subsystem = optarg; 
+        subsystem = optarg;
       } else {
         fprintf(stderr, "unknown option\n");
         usage(argv[0]);
@@ -212,27 +211,27 @@ int main(int argc, char** argv)
     }
   }
 
-  // process remaining required commandline params
+  /* process remaining required commandline params */
   if (argc - optind >= 2) {
       i = argc - optind;
       i2c_bus = atoi(argv[optind++]);
       gsc_irq = atoi(argv[optind++]);
   }
 
-  // validate options
+  /* validate options */
   if (i2c_bus == -1 || gsc_irq == -1) {
     fprintf(stderr, "invalid configuration\n");
     usage(argv[0]);
   }
 
-  //open main i2c kernel device so we can communicate with GSC over it
+  /*open main i2c kernel device so we can communicate with GSC over it */
   snprintf(buf, sizeof(buf)-1, "/dev/i2c-%d", i2c_bus);
   if ((i2c_fd = open(buf, O_RDWR)) < 0) {
     fprintf(stderr, "Failed to open %s: %s\n", buf, strerror(errno));
     exit(-1);
   }
 
-  // open /sys/class gpio file that we will be polling for interrupts
+  /* open /sys/class gpio file that we will be polling for interrupts */
   snprintf(buf, sizeof(buf)-1, "/sys/class/gpio/gpio%d/edge",
       gsc_irq);
   if ((gpio_fd = open(buf, O_WRONLY)) < 0) {
@@ -253,18 +252,29 @@ int main(int argc, char** argv)
 
   printf("%s: monitoring gpio%d for GSC interrupt\n", argv[0], gsc_irq);
   if (pb_gpio != -1) {
-    printf(" and pushbutton on gpio%d (bit%d)\n", pb_gpio, pb_gpio-100);
-    pb_gpio -= 100; // turn into bit
+    printf(" and pushbutton on gpio%d (bit", pb_gpio);
+    /* To turn into a bit, check laguna (starts at 100)
+     * If not within that gpio range, assume 8 bits per gpio register
+     */
+    if (pb_gpio < 108)
+      pb_gpio -= 100; /* turn into bit */
+    else if (pb_gpio < 116)
+      pb_gpio -= 108;
+    else
+      pb_gpio %= 8;
+    printf("%d)\n", pb_gpio);
+
     nochange_mask |= 1<<pb_gpio;
   }
   if (timeout)
     printf(" and nochange events every %d seconds\n", timeout);
 
-  //This read clears out the data from the value file so that we only get
-  // interrupts
+  /* This read clears out the data from the value file so that we only get
+   * interrupts
+   */
   read(gpio_fd, buf, sizeof(buf));
 
-  //initialize gpio states and last state change time
+  /* initialize gpio states and last state change time */
   for (i = 0; i < 4; i++)
       env[i] = (char*) malloc(32);
   env[4] = 0;
@@ -277,7 +287,7 @@ int main(int argc, char** argv)
   last_gpio = get_gpio(i2c_fd);
   DPRINTF("GPIO:%04x\n", last_gpio);
 
-  // clear GSC interrupts 
+  /* clear GSC interrupts */
   clear_interrupt(i2c_fd, 0xff);
 
   while (1) {
@@ -298,7 +308,7 @@ int main(int argc, char** argv)
     if (c > 0 || timeout) {
       event_time = time(NULL);
       gpio = get_gpio(i2c_fd);
-      changed = gpio ^ last_gpio; //gpios that changed their states
+      changed = gpio ^ last_gpio; /* gpios that changed their states */
       DPRINTF("GPIO:%04x/%04x/%04x\n", gpio, last_gpio, changed);
       last_gpio = gpio;
     }
@@ -316,47 +326,45 @@ int main(int argc, char** argv)
       DPRINTF("read %d bytes: %s\n", rz, buf);
     }
 
-    /* timeout occurred
-     */
+    /* timeout occurred */
     if (c == 0) {
       if (!timeout)
         continue;
       DPRINTF("timeout\n");
-      // emulate a GSC interrupt to handle 'nochange' event
+      /* emulate a GSC interrupt to handle 'nochange' event */
       source = 1<<GSC_INT_GPIO;
-    } // end timeout
+    } /* end timeout */
 
-    /* GSC Interrupt has occured - determine source and emit event
-     */
+    /* GSC Interrupt has occured - determine source and emit event */
     else {
-      //set i2c bus contoller to send to the proper slave address
+      /* set i2c bus contoller to send to the proper slave address */
       if (ioctl(i2c_fd, I2C_SLAVE_FORCE, GSC_I2C_ADDR) < 0) {
         perror("I2C_SLAVE_FORCE");
         break;
       }
 
       source = i2c_smbus_read_byte_data(i2c_fd, GSC_INT_SOURCE);
-      //source &= i2c_smbus_read_byte_data(i2c_fd, GSC_INT_ENABLE);
+      /* source &= i2c_smbus_read_byte_data(i2c_fd, GSC_INT_ENABLE); */
       DPRINTF("GSC interrupt: 0x%02x\n", source);
 
-      // clear all interrupts 
+      /* clear all interrupts */
       clear_interrupt(i2c_fd, 0xff);
     }
 
-    // iterate over various IRQ bits
+    /* iterate over various IRQ bits */
     for (i = 0; i < 8; i++) {
       if (source & (1<<i)) {
         sprintf(env[0], "SEEN=%d", (int) (event_time - irq_time[i]));
         sprintf(env[3], "COUNT=");
         irq_time[i] = event_time;
         switch (i) {
-        // GPIO change
+        /* GPIO change */
         case GSC_INT_GPIO: {
           int j;
 
-          // iterate over all GSC GPIO bits
+          /* iterate over all GSC GPIO bits */
           for (j = 0; j < 16; j++) {
-            // emit events for GPIO's that have changed
+            /* emit events for GPIO's that have changed */
             if (changed & 1<<j) {
               int seen = (int) (event_time - gpio_time[j]);
               gpio_time[j] = event_time;
@@ -377,7 +385,7 @@ int main(int argc, char** argv)
               hotplug_event(subsystem, env);
             }
 
-            // emit events for GPIO's that have not changed if timeout/mask
+            /* emit events for GPIO's that have not changed if timeout/mask */
             else if (nochange_mask & 1<<j && timeout) {
               int seen = (int) (event_time - gpio_time[j]);
               gpio_time[j] = event_time;
@@ -389,7 +397,7 @@ int main(int argc, char** argv)
               sprintf(env[1], "COUNT=%d", gpio_count[j]);
               if (pb_gpio != -1 && j == pb_gpio) {
                 if (gpio & 1<<j) {
-                  // don't bother emitting 'unheld' events for pushbutton
+                  /* don't bother emitting 'unheld' events for pushbutton */
                   continue;
                 } else {
                   sprintf(env[2], "BUTTON=%s", pb_name);
@@ -405,36 +413,36 @@ int main(int argc, char** argv)
           }
         } break;
 
-        // Pushbutton quick press and release event
+        /* Pushbutton quick press and release event */
         case GSC_INT_PB:
           sprintf(env[1], "BUTTON=%s", pb_name);
           sprintf(env[2], "ACTION=pressed");
           hotplug_event(subsystem, env);
           break;
 
-        // Pushbutton held > 700ms event
+        /* Pushbutton held > 700ms event */
         case GSC_INT_PB_LONG:
           sprintf(env[1], "BUTTON=%s", pb_name);
           sprintf(env[2], "ACTION=held");
           hotplug_event(subsystem, env);
           break;
 
-        // EEPROM Erase complete event
+        /* EEPROM Erase complete event */
         case GSC_INT_ERASE:
           sprintf(env[1], "BUTTON=erase");
           sprintf(env[2], "ACTION=complete");
           hotplug_event(subsystem, env);
-          break; 
+          break;
 
-        // Tamper event
+        /* Tamper event */
         case GSC_INT_TAMPER:
           sprintf(env[1], "BUTTON=tamper");
           sprintf(env[2], "ACTION=asserted");
           hotplug_event(subsystem, env);
-          break; 
-        } 
+          break;
+        }
       }
-    } // for all interrupt status bits
+    } /* for all interrupt status bits */
   }
 
   close(i2c_fd);
