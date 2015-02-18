@@ -7,12 +7,12 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=button-hotplug
+PKG_NAME:=button-hotplug-gw
 PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/button-hotplug
+define Package/button-hotplug-gw
   SECTION:=utils
   CATEGORY:=Gateworks
   TITLE:=Hotplug button script
@@ -20,7 +20,7 @@ define Package/button-hotplug
   URL:=http://trac.gateworks.com/wiki/
 endef
 
-define Package/button-hotplug/description
+define Package/button-hotplug-gw/description
   OpenWrt button events are dispatched through the hotplug system to 
   the button subsystem. This script and default config adds a handler
   script that can track button-presses and execute handlers configured
@@ -33,7 +33,7 @@ endef
 define Build/Compile
 endef
 
-define Package/button-hotplug/install
+define Package/button-hotplug-gw/install
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/button
 	$(INSTALL_BIN) ./files/hotplug $(1)/etc/hotplug.d/button/00-button
 
@@ -41,4 +41,4 @@ define Package/button-hotplug/install
 	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/00-button
 endef
 
-$(eval $(call BuildPackage,button-hotplug))
+$(eval $(call BuildPackage,button-hotplug-gw))
