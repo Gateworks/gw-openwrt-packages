@@ -1,0 +1,11 @@
+#!/bin/sh
+
+uci -q show system.@button[0] || {
+	uci add system button
+
+	uci set system.@button[0].button=BTN_0
+	uci set system.@button[0].action=pressed
+	uci set system.@button[0].handler='logger BTN_0 pressed'
+
+	uci commit
+}
