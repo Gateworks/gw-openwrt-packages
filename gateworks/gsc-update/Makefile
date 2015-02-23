@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gsc-update
 PKG_RELEASE:=1
-PKG_VERSION:=1.2
+PKG_VERSION:=1.3
 
 include $(INCLUDE_DIR)/package.mk
 

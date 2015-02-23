@@ -17,7 +17,7 @@
 #include "i2c.h"
 #include "i2c_upgrader.h"
 
-#define GSC_UPDATER_REV 6
+#define GSC_UPDATER_REV "1.3"
 
 #define GSC_DEVICE		0x20
 #define GSC_UPDATER		0x21
@@ -38,8 +38,8 @@ int calc_crc(unsigned char data[16][16384], unsigned short address[16], unsigned
 
 void print_banner(void)
 {
-	printf("Gateworks GSC Updater r%i\n", GSC_UPDATER_REV);
-	printf("Copyright (C) 2004-2012, Gateworks Corporation, All Rights Reserved\n");
+	printf("Gateworks GSC Updater v%s\n", GSC_UPDATER_REV);
+	printf("Copyright (C) 2004-2015, Gateworks Corporation, All Rights Reserved\n");
 	printf("Built %s, %s\n", __TIME__, __DATE__);
 }
 
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	if (ioctl(file, I2C_SLAVE, GSC_DEVICE) < 0) {
+	if (ioctl(file, I2C_SLAVE_FORCE, GSC_DEVICE) < 0) {
 		perror("couldn't set GSC address");
 		exit(1);
 	}
@@ -173,7 +173,7 @@ int main(int argc, char **argv)
 	printf("Current GSC Firmware Rev: %i (crc=0x%04x)\n", ret & 0xff, crc);
 
 	/* set slave device to GSC update addr and unlock the GSC for programming */
-	if (ioctl(file, I2C_SLAVE, GSC_UPDATER) < 0) {
+	if (ioctl(file, I2C_SLAVE_FORCE, GSC_UPDATER) < 0) {
 		perror("couldn't set GSC_UPDATER address");
 		exit(1);
 	}
@@ -287,14 +287,14 @@ int main(int argc, char **argv)
 
 	/* disable boot watchdog */
 	sleep(1);
-	if (ioctl(file, I2C_SLAVE, GSC_DEVICE) < 0) {
+	if (ioctl(file, I2C_SLAVE_FORCE, GSC_DEVICE) < 0) {
 		perror("couldn't set GSC address");
 		exit(1);
 	}
 	i2c_smbus_write_byte(file, 1);
 	ret = i2c_smbus_read_byte_data(file, 1);
 	printf("R1:0x%02x\n", ret);
-	if (ret & 1<<5) {
+	if (ret & 1<<6) {
 		printf("stopping boot watchdog timer\n");
 		i2c_smbus_write_byte_data(file, 1, 1<<7);
 	}
@@ -338,7 +338,6 @@ int calc_crc(unsigned char data[16][16384], unsigned short address[16], unsigned
 	struct eeprom_layout *layout = NULL;
 	int i,j;
 
-printf("addr[0]=0x%04x\n", address[0]);
 	for (i = 0; i < sizeof(layouts)/sizeof(layouts[0]); i++) {
 		if (address[0] == layouts[i].start) {
 			layout = &layouts[i];
