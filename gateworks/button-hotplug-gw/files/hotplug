@@ -30,6 +30,7 @@ do_button () {
 			echo -n $count > /var/run/button-$BUTTON
 			[ $count -ge $repeat ] && eval $handler
 			continue
+		}
 		[ -z "$min" -o -z "$max" ] && eval $handler
 		[ -n "$min" -a -n "$max" ] && {
 			[ $min -le $SEEN -a $max -ge $SEEN ] && eval $handler
