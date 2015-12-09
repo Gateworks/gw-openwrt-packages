@@ -17,7 +17,7 @@
 #include "i2c.h"
 #include "i2c_upgrader.h"
 
-#define GSC_UPDATER_REV "1.3"
+#define GSC_UPDATER_REV "1.4"
 
 #define GSC_DEVICE		0x20
 #define GSC_UPDATER		0x21
