@@ -183,6 +183,8 @@ int main(int argc, char **argv)
 	/* ##### Stage 1 Upgrader ##### */
 	// Erase all of main flash
 	for (i = ((address[0] & 0xf000) | 0x400); i < 0xffff; i += 0x200) {
+		if (i >= 0xF800 && i <= 0xFC00)
+			continue;
 		buffer[0] = i & 0xff;
 		buffer[1] = (i >> 8) & 0xff;
 		i2c_smbus_write_i2c_block_data(file, 1, 2, buffer);
@@ -242,6 +244,8 @@ int main(int argc, char **argv)
 
 	// Erase all of main flash
 	for (i = (address[0] & 0xf000); i < 0xffff; i += 0x200) {
+		if (i >= 0xF800 && i <= 0xFC00)
+			continue;
 		buffer[0] = i & 0xff;
 		buffer[1] = (i >> 8) & 0xff;
 		i2c_smbus_write_i2c_block_data(file, GSC2_ADDR, 2, buffer);
