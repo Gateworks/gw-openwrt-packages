@@ -21,7 +21,7 @@ define Package/button-hotplug-gw
 endef
 
 define Package/button-hotplug-gw/description
-  OpenWrt button events are dispatched through the hotplug system to 
+  OpenWrt button events are dispatched through the hotplug system to
   the button subsystem. This script and default config adds a handler
   script that can track button-presses and execute handlers configured
   via uci.
@@ -36,6 +36,8 @@ endef
 define Package/button-hotplug-gw/install
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/button
 	$(INSTALL_BIN) ./files/hotplug $(1)/etc/hotplug.d/button/00-button
+	$(INSTALL_BIN) ./files/btn_handlers.sh $(1)/etc/hotplug.d/button/btn_handlers.sh
+	$(INSTALL_BIN) ./files/factory_reset $(1)/etc/hotplug.d/button/factory_reset
 
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/00-button

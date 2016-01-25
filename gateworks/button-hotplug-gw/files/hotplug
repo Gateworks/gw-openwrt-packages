@@ -4,6 +4,9 @@
 #exec >/dev/console
 #echo "$0: button=$BUTTON action=$ACTION SEEN=$SEEN"
 
+HOTPLUG_DIR=/etc/hotplug.d/button/
+. ${HOTPLUG_DIR}/btn_handlers.sh
+
 . /lib/functions.sh
 do_button () {
 	local button
