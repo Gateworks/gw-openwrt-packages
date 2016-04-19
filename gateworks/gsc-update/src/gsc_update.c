@@ -1,7 +1,7 @@
 /**
  * gsc_update.c Gateworks System Controller Firmware Updater
  *
- * Copyright 2008-2012 Gateworks Corporation
+ * Copyright 2004-2016 Gateworks Corporation
  *
  */
 #include <stdio.h>
@@ -17,7 +17,7 @@
 #include "i2c.h"
 #include "i2c_upgrader.h"
 
-#define GSC_UPDATER_REV "1.4"
+#define GSC_UPDATER_REV "1.5"
 
 #define GSC_DEVICE		0x20
 #define GSC_UPDATER		0x21
@@ -64,7 +64,7 @@ int calc_crc(struct eeprom_layout *, unsigned char data[16][16384], unsigned sho
 void print_banner(void)
 {
 	printf("Gateworks GSC Updater v%s\n", GSC_UPDATER_REV);
-	printf("Copyright (C) 2004-2015, Gateworks Corporation, All Rights Reserved\n");
+	printf("Copyright (C) 2004-2016, Gateworks Corporation, All Rights Reserved\n");
 	printf("Built %s, %s\n", __TIME__, __DATE__);
 }
 
