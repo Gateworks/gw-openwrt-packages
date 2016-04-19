@@ -209,8 +209,8 @@ int main(int argc, char **argv)
 
 	/* ##### Stage 1 Upgrader ##### */
 	// Erase main app
-	for (i = ((address[0] & 0xf000) | 0x400); i < 0xffff; i += 0x200) {
-		if (i >= 0xF800 && i <= 0xFC00)
+	for (i = layout->start + 0x400; i < layout->end; i += 0x200) {
+		if (i >= layout->eeprom_start && i <= layout->eeprom_end)
 			continue;
 		buffer[0] = i & 0xff;
 		buffer[1] = (i >> 8) & 0xff;
@@ -270,8 +270,8 @@ int main(int argc, char **argv)
 	}
 
 	// Erase all of main flash
-	for (i = (address[0] & 0xf000); i < 0xffff; i += 0x200) {
-		if (i >= 0xF800 && i <= 0xFC00)
+	for (i = layout->start; i < layout->end; i += 0x200) {
+		if (i >= layout->eeprom_start && i <= layout->eeprom_end)
 			continue;
 		buffer[0] = i & 0xff;
 		buffer[1] = (i >> 8) & 0xff;
