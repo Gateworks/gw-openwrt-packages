@@ -177,7 +177,7 @@ int main(int argc, char **argv)
 	crc = calc_crc(layout, data, address, length);
 	printf("%s: %s crc=0x%04x\n", layout->name, prog_filename, crc);
 	if (calc_crc_only) {
-		return 1;
+		return 0;
 	}
 
 	sprintf(device, "/dev/i2c-%d", i2cbus);
@@ -343,7 +343,7 @@ int main(int argc, char **argv)
 
 	close(file);
 
-	return 1;
+	return 0;
 }
 
 int calc_crc(struct eeprom_layout *layout, unsigned char data[16][16384], unsigned short address[16], unsigned short length[16])
