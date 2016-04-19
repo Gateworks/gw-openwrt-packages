@@ -33,8 +33,33 @@
 #define GSC2_WORD			0x4
 #define GSC2_PROG			0x5
 
-int parse_data_file(char *filename, unsigned char data[16][16384], unsigned short address[16], unsigned short length[16]);
-int calc_crc(unsigned char data[16][16384], unsigned short address[16], unsigned short length[16]);
+struct eeprom_layout {
+	const char* name;
+	int start;
+	int end;
+	int eeprom_start;
+	int eeprom_end;
+};
+
+struct eeprom_layout layouts[] = {
+	{
+		.name         = "GSC v1",
+		.start        = 0xe000,
+		.end          = 0xffff,
+		.eeprom_start = 0xfc00,
+		.eeprom_end   = 0xfdff,
+	},
+	{
+		.name         = "GSC v2",
+		.start        = 0xc000,
+		.end          = 0xffff,
+		.eeprom_start = 0xf800,
+		.eeprom_end   = 0xfdff,
+	},
+};
+
+struct eeprom_layout *parse_data_file(char *filename, unsigned char data[16][16384], unsigned short address[16], unsigned short length[16]);
+int calc_crc(struct eeprom_layout *, unsigned char data[16][16384], unsigned short address[16], unsigned short length[16]);
 
 void print_banner(void)
 {
@@ -57,6 +82,7 @@ void print_help(void)
 
 int main(int argc, char **argv)
 {
+	struct eeprom_layout *layout;
 	unsigned long funcs;
 	unsigned char data[16][16384];
 	unsigned short address[16];
@@ -121,7 +147,8 @@ int main(int argc, char **argv)
 	print_banner();
 
 	/* parse and validate file */
-	if (parse_data_file(prog_filename, data, address, length)) {
+	layout = parse_data_file(prog_filename, data, address, length);
+	if (!layout) {
 		exit(2);
 	}
 
@@ -136,8 +163,8 @@ int main(int argc, char **argv)
 	}
 
 	/* calculate CRC over parsed file */
-	crc = calc_crc(data, address, length);
-	printf("%s: crc=0x%04x\n", prog_filename, crc);
+	crc = calc_crc(layout, data, address, length);
+	printf("%s: %s crc=0x%04x\n", layout->name, prog_filename, crc);
 	if (calc_crc_only) {
 		return 1;
 	}
@@ -181,7 +208,7 @@ int main(int argc, char **argv)
 	ret = i2c_smbus_read_byte_data(file, 0);
 
 	/* ##### Stage 1 Upgrader ##### */
-	// Erase all of main flash
+	// Erase main app
 	for (i = ((address[0] & 0xf000) | 0x400); i < 0xffff; i += 0x200) {
 		if (i >= 0xF800 && i <= 0xFC00)
 			continue;
@@ -308,29 +335,7 @@ int main(int argc, char **argv)
 	return 1;
 }
 
-struct eeprom_layout {
-	int start;
-	int end;
-	int eeprom_start;
-	int eeprom_end;
-};
-
-struct eeprom_layout layouts[] = {
-	{
-		.start        = 0xe000,
-		.end          = 0xffff,
-		.eeprom_start = 0xfc00,
-		.eeprom_end   = 0xfdff,
-	},
-	{
-		.start        = 0xc000,
-		.end          = 0xffff,
-		.eeprom_start = 0xf800,
-		.eeprom_end   = 0xfdff,
-	},
-};
-	
-int calc_crc(unsigned char data[16][16384], unsigned short address[16], unsigned short length[16])
+int calc_crc(struct eeprom_layout *layout, unsigned char data[16][16384], unsigned short address[16], unsigned short length[16])
 {
 	const unsigned short crc_16_table[16] = {
 	  0x0000, 0xCC01, 0xD801, 0x1400, 0xF001, 0x3C00, 0x2800, 0xE401,
@@ -339,19 +344,7 @@ int calc_crc(unsigned char data[16][16384], unsigned short address[16], unsigned
 	unsigned int addr;
 	unsigned short crc = 0;
 	unsigned short r;
-	struct eeprom_layout *layout = NULL;
 	int i,j;
-
-	for (i = 0; i < sizeof(layouts)/sizeof(layouts[0]); i++) {
-		if (address[0] == layouts[i].start) {
-			layout = &layouts[i];
-			break;
-		}
-	}
-	if (!layout) {
-		printf("%s: unrecognized layout\n", __func__);
-		return 0;
-	}
 
 	addr = layout->start;
 	for (i = 0; i < 16; i++) {
@@ -390,7 +383,7 @@ int calc_crc(unsigned char data[16][16384], unsigned short address[16], unsigned
 	return crc;
 }
 
-int parse_data_file(char *filename, unsigned char data[16][16384], unsigned short address[16], unsigned short length[16])
+struct eeprom_layout *parse_data_file(char *filename, unsigned char data[16][16384], unsigned short address[16], unsigned short length[16])
 {
 	FILE *fd;
 	char line[1024];
@@ -405,22 +398,24 @@ int parse_data_file(char *filename, unsigned char data[16][16384], unsigned shor
 	memset(data, 0, 16*16384);
 
 	fd = fopen(filename, "r");
-	if (!fd)
-		return -1;
+	if (!fd) {
+		perror("open failed");
+		return NULL;
+	}
 	while (fgets(line, sizeof(line), fd)) {
 		linenum++;
 		if (linenum == 1 && line[0] != '@') {
 			fprintf(stderr, "Invalid GSC firmware file\n");
-			return linenum;
+			return NULL;
 		} 
-		if (line[0] == '@') {
+		if (line[0] == '@' && address_loc < 16) {
 			j = 0;
 			address_loc++;
 			address[address_loc] = (short) strtol(line+1, 0, 16);
 		} else if (line[0] != 'q') {
 			num_scan = sscanf(line, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
 				t[0], t[1], t[2], t[3], t[4], t[5], t[6], t[7], t[8], t[9], t[10], t[11], t[12], t[13], t[14], t[15]);
-			for (i = 0; i < num_scan; i++) {
+			for (i = 0; i < num_scan && j < 16384; i++) {
 				temp_word = strtol(t[i], 0, 16);
 				data[address_loc][j++] = temp_word;
 				length[address_loc]++;
@@ -428,5 +423,15 @@ int parse_data_file(char *filename, unsigned char data[16][16384], unsigned shor
 		}
 	}
 
-	return 0;
+	/* Verify we match a known FLASH layout and have the 2 segments */
+	for (i = 0; i < sizeof(layouts)/sizeof(layouts[0]); i++) {
+		if (layouts[i].start == address[0] &&
+		    layouts[i].start + 0x400 == address[1])
+		{
+			return(&layouts[i]);
+		}
+	}
+	fprintf(stderr, "%s: unrecognized layout\n", filename);
+
+	return NULL;
 }
