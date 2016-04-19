@@ -154,11 +154,21 @@ int main(int argc, char **argv)
 
 	/* display info about memory segments */
 	if (verbose) {
+		j = 0;
 		printf("Segments:\n");
-		for(i=0;i<16;i++) {
-			if (length[i])
-				printf("\t0x%04x:%05d(%04x) bytes\n",
+		for(i=0;i<16 && length[i];i++) {
+			if (length[i]) {
+				printf("\t0x%04x:%05d(%04x) bytes",
 				       address[i], length[i], length[i]);
+			}
+			if (address[i] == layout->start + 0x400) {
+				printf(" (%d unused)", (layout->eeprom_start
+				       - address[i]) - length[i]);
+			}
+			else if (address[i] == layout->start) {
+				printf(" (%d unused)", 0x400 - length[i]);
+			}
+			printf("\n");
 		}
 	}
 
