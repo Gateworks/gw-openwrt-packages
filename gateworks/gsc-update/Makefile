@@ -8,8 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gsc-update
+PKG_VERSION:=1.5
 PKG_RELEASE:=1
-PKG_VERSION:=1.4
+
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=git://github.com/Gateworks/gsc_update
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_VERSION:=ccc9877ae330c2f713fe29c7f55f55997b49c627
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -25,16 +31,6 @@ define Package/gsc-update/description
 endef
 
 TARGET_CFLAGS += -D${CONFIG_TARGET_BOARD}
-
-define Build/Prepare
-	$(INSTALL_DIR) $(PKG_BUILD_DIR)
-	$(CP) ./src/* $(PKG_BUILD_DIR)/
-endef
-
-define Build/Compile
-  $(TARGET_CC) $(TARGET_CFLAGS) -Wall \
-    -o $(PKG_BUILD_DIR)/gsc_update $(PKG_BUILD_DIR)/gsc_update.c
-endef
 
 define Package/gsc-update/install
 	$(INSTALL_DIR) $(1)/usr/bin
