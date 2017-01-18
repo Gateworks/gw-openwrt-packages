@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mtd-utils
-PKG_REV:=http://git.openwrt.org/?p=packages.git;a=blob_plain;f=utils/mtd-utils/Makefile;hb=HEAD
+PKG_REV:=aea36417067dade75192bafa03af70b6eb2677b1
 PKG_VERSION:=1.5.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_REV).tar.gz
 PKG_SOURCE_URL:=git://git.infradead.org/mtd-utils.git
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
