@@ -19,40 +19,28 @@ end
 
 -- read current data from hwmon
 function hardware_status()
-
-	--require "luci.tools.status"
-
-	local has_gsp = true
-	local gsp_temp
+	local gsc_dev
 	local input_v = {}
 	local input_v_name = {}
-
-	gsp_temp = tonumber((luci.sys.exec("cat $(find -L /sys/class/hwmon/ -maxdepth 3 -name in0_input)") or "-6"))
-	if gsp_temp == -6 then
-		has_gsp = false
+	for f in string.gmatch(luci.sys.exec("ls /sys/class/hwmon/"), "[^%s]+") do
+		if luci.sys.exec("cat /sys/class/hwmon/" .. f .. "/name") == "gsc_hwmon\n" then
+			gsc_dev = f
+		end
 	end
-
-	if has_gsp then
+	if gsc_dev ~= nil then
 		for i=1, 12 do
 			input_v[i] = tonumber((
-				luci.sys.exec("cat $(find -L /sys/class/hwmon/ -maxdepth 3 -name in" .. i .. "_input)") or ""))
+				luci.sys.exec("cat /sys/class/hwmon/" .. gsc_dev .. "/in" .. i .. "_input") or ""))
 			input_v_name[i] =
-				luci.sys.exec("cat $(find -L /sys/class/hwmon/ -maxdepth 3 -name in" .. i .. "_label)")
+				luci.sys.exec("cat /sys/class/hwmon/" .. gsc_dev .. "/in" .. i .. "_label")
 		end
 
 		current_temp = tonumber((
-			luci.sys.exec("cat $(find -L /sys/class/hwmon/ -maxdepth 3 -name temp0_input)") or
+			luci.sys.exec("cat /sys/class/hwmon/" .. gsc_dev .. "/temp1_input") or
 			""))
 		current_vin = tonumber((
-			luci.sys.exec("cat $(find -L /sys/class/hwmon/ -maxdepth 3 -name in0_input)") or
+			luci.sys.exec("cat /sys/class/hwmon/" .. gsc_dev .. "/in0_input") or
 			""))
-	else
-		current_temp = tonumber((
-			luci.sys.exec("cat $(find -L /sys/class/hwmon/ -maxdepth 3 -name temp1_input)") or
-			"")) / 100
-		current_vin = tonumber((
-			luci.sys.exec("cat $(find -L /sys/class/hwmon/ -maxdepth 3 -name in1_input)") or
-			"")) * 22.1
 	end
 
 	local rv = {
