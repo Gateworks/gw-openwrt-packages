@@ -12,7 +12,7 @@ PKG_VERSION:=1.6
 PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=git://github.com/Gateworks/gsc_update
+PKG_SOURCE_URL:=https://github.com/Gateworks/gsc_update
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=87acabd1101c673c5f8c97eec4d35358bc3df3d7
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
