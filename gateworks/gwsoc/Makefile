@@ -26,7 +26,7 @@ define Package/gwsoc
   CATEGORY:=Gateworks
   TITLE:=Gateworks Programable System On Chip
   MAINTAINER:=Gateworks Corporation <support@gateworks.com>
-  DEPENDS:=+hidapi +libusb-1.0 +libiconv +librt
+  DEPENDS:=+hidapi +libusb-1.0 +librt
 endef
 
 define Package/gwsoc/description
