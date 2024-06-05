@@ -10,12 +10,12 @@
 				var e;
 
 				e = document.getElementById('temp');
-				e.innerHTML = String.format('%.02fC', info.temp / 10);
+				e.innerHTML = String.format('%.02fC', info.temp / 1000);
 					
 				e = document.getElementById('vin');
 				e.innerHTML = String.format('%.02fV', info.vin / 1000);
 				
-				for (var i = 1; i <= 12; i++) {
+				for (var i = 0; i <= 12; i++) {
 					var id = 'in' + i;
 					if (info.input_volt[i-1] == 0xffffff || !info.input_name[i-1])
 					{
@@ -46,6 +46,7 @@
 	<table width="100%" cellspacing="10">
 		<tr><td width="33%"><%:Temperature%></td><td id="temp">-</td></tr>
 		<tr><td width="33%"><%:Input Voltage%></td><td id="vin">-</td></tr>
+		<tr id="in0" style="display:none"><td width="33%" id="in0_name">-</td><td id="in0_v">-</td></tr>
 		<tr id="in1" style="display:none"><td width="33%" id="in1_name">-</td><td id="in1_v">-</td></tr>
 		<tr id="in2" style="display:none"><td width="33%" id="in2_name">-</td><td id="in2_v">-</td></tr>
 		<tr id="in3" style="display:none"><td width="33%" id="in3_name">-</td><td id="in3_v">-</td></tr>

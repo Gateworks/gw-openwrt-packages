@@ -28,7 +28,7 @@ function hardware_status()
 		end
 	end
 	if gsc_dev ~= nil then
-		for i=1, 12 do
+		for i=0, 12 do
 			input_v[i] = tonumber((
 				luci.sys.exec("cat /sys/class/hwmon/" .. gsc_dev .. "/in" .. i .. "_input") or ""))
 			input_v_name[i] =
