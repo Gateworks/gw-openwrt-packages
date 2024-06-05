@@ -1,0 +1,78 @@
+From 42bc0d8eadabf29011fd6e07cf8f7c3eff24c71b Mon Sep 17 00:00:00 2001
+From: Tim Harvey <tharvey@gateworks.com>
+Date: Fri, 1 Mar 2024 10:34:56 -0800
+Subject: [PATCH 1/2] nrc: fix build issue for openwrt
+
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ package/src/nrc/Makefile       | 2 +-
+ package/src/nrc/nrc-mac80211.c | 1 +
+ package/src/nrc/nrc-netlink.c  | 1 +
+ package/src/nrc/nrc-pm.c       | 1 +
+ package/src/nrc/nrc-trx.c      | 1 +
+ 5 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/package/src/nrc/Makefile b/package/src/nrc/Makefile
+index aebf479..5df9e34 100644
+--- a/package/src/nrc/Makefile
++++ b/package/src/nrc/Makefile
+@@ -2,7 +2,7 @@
+ KDIR ?= /lib/modules/$(shell uname -r)/build
+ CHECKPATCH ?= $(KDIR)/scripts/checkpatch.pl
+ 
+-include $(KDIR)/.config
++#include $(KDIR)/.config
+ 
+ M_SRC = nrc
+ 
+diff --git a/package/src/nrc/nrc-mac80211.c b/package/src/nrc/nrc-mac80211.c
+index 5dface3..cbe1b18 100644
+--- a/package/src/nrc/nrc-mac80211.c
++++ b/package/src/nrc/nrc-mac80211.c
+@@ -40,6 +40,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/module.h>
+ #include <linux/ktime.h>
++#include <uapi/linux/genetlink.h>
+ #include <net/genetlink.h>
+ #include <linux/spi/spi.h>
+ #include <linux/gpio.h>
+diff --git a/package/src/nrc/nrc-netlink.c b/package/src/nrc/nrc-netlink.c
+index 635096d..6dd1eae 100644
+--- a/package/src/nrc/nrc-netlink.c
++++ b/package/src/nrc/nrc-netlink.c
+@@ -14,6 +14,7 @@
+  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  */
+ 
++#include <uapi/linux/genetlink.h>
+ #include <net/genetlink.h>
+ #include "nrc-mac80211.h"
+ #include "nrc-netlink.h"
+diff --git a/package/src/nrc/nrc-pm.c b/package/src/nrc/nrc-pm.c
+index d453995..3d68d36 100644
+--- a/package/src/nrc/nrc-pm.c
++++ b/package/src/nrc/nrc-pm.c
+@@ -29,6 +29,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/module.h>
+ #include <linux/ktime.h>
++#include <uapi/linux/genetlink.h>
+ #include <net/genetlink.h>
+ #include <linux/spi/spi.h>
+ #include <linux/ieee80211.h>
+diff --git a/package/src/nrc/nrc-trx.c b/package/src/nrc/nrc-trx.c
+index 8685f78..4d1cdc9 100644
+--- a/package/src/nrc/nrc-trx.c
++++ b/package/src/nrc/nrc-trx.c
+@@ -30,6 +30,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/module.h>
+ #include <linux/ktime.h>
++#include <uapi/linux/genetlink.h>
+ #include <net/genetlink.h>
+ #include <linux/spi/spi.h>
+ #include <linux/gpio.h>
+-- 
+2.34.1
+

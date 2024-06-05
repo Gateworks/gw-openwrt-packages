@@ -1,0 +1,41 @@
+From 381902d6a3f67565945cf9290f15d356c5d00420 Mon Sep 17 00:00:00 2001
+From: Tim Harvey <tharvey@gateworks.com>
+Date: Mon, 4 Mar 2024 11:57:53 -0800
+Subject: [PATCH 2/2] nrc-init: set defaults appropriate for GW16146
+
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ package/src/nrc/nrc-init.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/package/src/nrc/nrc-init.c b/package/src/nrc/nrc-init.c
+index 3bbaedd..e2cc356 100644
+--- a/package/src/nrc/nrc-init.c
++++ b/package/src/nrc/nrc-init.c
+@@ -37,12 +37,12 @@
+ #include "nrc-bd.h"
+ #endif /* defined(CONFIG_SUPPORT_BD) */
+ 
+-char *fw_name;
++char *fw_name = "nrc7292_cspi.bin";
+ module_param(fw_name, charp, 0444);
+ MODULE_PARM_DESC(fw_name, "Firmware file name");
+ 
+ #if defined(CONFIG_SUPPORT_BD)
+-char *bd_name ="bd.dat";
++char *bd_name ="nrc7292_bd.dat";
+ module_param(bd_name, charp, 0600);
+ MODULE_PARM_DESC(bd_name, "Board Data file name");
+ #endif /* defined(CONFIG_SUPPORT_BD) */
+@@ -89,7 +89,7 @@ int spi_gpio_irq = -1;
+ module_param(spi_gpio_irq, int, 0600);
+ MODULE_PARM_DESC(spi_gpio_irq, "SPI gpio irq");
+ 
+-int spi_polling_interval = 0;
++int spi_polling_interval = 5;
+ module_param(spi_polling_interval, int, 0600);
+ MODULE_PARM_DESC(spi_polling_interval, "SPI polling interval (msec)");
+ 
+-- 
+2.34.1
+
