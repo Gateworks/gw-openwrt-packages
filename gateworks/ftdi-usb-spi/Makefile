@@ -4,7 +4,7 @@ include $(INCLUDE_DIR)/kernel.mk
 PKG_NAME:=ftdi-usb-spi
 PKG_RELEASE:=1
 
-PKG_VERSION=master
+PKG_VERSION=1.0
 PKG_SOURCE_URL:=https://github.com/gateworks/ftdi-usb-spi
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=3c1df20fa8c15340084ef60b480bcfe7ed60251a
