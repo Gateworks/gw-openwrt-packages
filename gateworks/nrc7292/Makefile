@@ -7,13 +7,18 @@ PKG_RELEASE:=1
 PKG_VERSION:=v1.5.1-gateworks
 PKG_SOURCE_URL:=https://github.com/Gateworks/nrc7292.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=b550181122b687ccc3c88177f49edfddaee0f28c
-PKG_MIRROR_HASH:=ecfb45a98284222b16faa6a799835efc1e3982eed6b8bac97f32e07e54c3fd04
+PKG_SOURCE_VERSION:=95d6c81300c6f960b114cbc0253d358214542caf
+PKG_MIRROR_HASH:=3b3de6130b64b69014294b2f0149f5852c61e10138848463c583bec26ae2e01e
 
 PKG_FLAGS:=nonshared
 PKG_EXTMOD_SUBDIRS:=package/src/nrc
 
 include $(INCLUDE_DIR)/package.mk
+
+# Extract mac80211 version
+MAC80211_VERSION:=$(shell grep '^PKG_VERSION:=' $(TOPDIR)/package/kernel/mac80211/Makefile | cut -d'=' -f2)
+MAC80211_VERSION_CODE=$(shell echo "$(MAC80211_VERSION)" | \
+		      awk -F[v.-] '// {printf("%u", lshift($$2, 16) + lshift($$3, 8) + $$4)}')
 
 define KernelPackage/nrc7292
   SUBMENU:=Wireless Drivers
@@ -39,6 +44,7 @@ NOSTDINC_FLAGS := \
 	-I$(STAGING_DIR)/usr/include/mac80211/uapi \
 	-I$(STAGING_DIR)/usr/include/mac80211 \
 	-include backport/backport.h \
+	-DMAC80211_BACKPORT_VERSION_CODE=$(MAC80211_VERSION_CODE) \
 	-Wno-unused-result
 
 define Build/Compile

@@ -1,7 +1,7 @@
-From 381902d6a3f67565945cf9290f15d356c5d00420 Mon Sep 17 00:00:00 2001
+From 3ea6681dd0cff847cebfda05c0016710b2393986 Mon Sep 17 00:00:00 2001
 From: Tim Harvey <tharvey@gateworks.com>
 Date: Mon, 4 Mar 2024 11:57:53 -0800
-Subject: [PATCH 2/2] nrc-init: set defaults appropriate for GW16146
+Subject: [PATCH 2/4] nrc-init: set defaults appropriate for GW16146
 
 Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 ---
@@ -9,7 +9,7 @@ Signed-off-by: Tim Harvey <tharvey@gateworks.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/package/src/nrc/nrc-init.c b/package/src/nrc/nrc-init.c
-index 3bbaedd..e2cc356 100644
+index 7d567c6..ab2dbfb 100644
 --- a/package/src/nrc/nrc-init.c
 +++ b/package/src/nrc/nrc-init.c
 @@ -37,12 +37,12 @@
@@ -27,7 +27,7 @@ index 3bbaedd..e2cc356 100644
  module_param(bd_name, charp, 0600);
  MODULE_PARM_DESC(bd_name, "Board Data file name");
  #endif /* defined(CONFIG_SUPPORT_BD) */
-@@ -89,7 +89,7 @@ int spi_gpio_irq = -1;
+@@ -89,7 +89,7 @@ int spi_gpio_irq = TARGET_GPIO_SPI_IRQ;
  module_param(spi_gpio_irq, int, 0600);
  MODULE_PARM_DESC(spi_gpio_irq, "SPI gpio irq");
  
