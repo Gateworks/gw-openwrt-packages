@@ -1,0 +1,33 @@
+From e477ac731451e8e9f9f6ff729c0335d6b7587b5d Mon Sep 17 00:00:00 2001
+From: Tim Harvey <tharvey@gateworks.com>
+Date: Mon, 14 Apr 2025 16:50:50 -0700
+Subject: [PATCH 4/4] use MAC80211_BACKPORT_VERSION_CODE version if defined
+
+When built against a Linux backport version of MAC80211 you can define
+MAC80211_BACKPORT_VERSION_CODE which will be used instead of the
+LINUX_VERSION_CODE.
+
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ package/src/nrc/nrc-build-config.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/package/src/nrc/nrc-build-config.h b/package/src/nrc/nrc-build-config.h
+index 37e4372..c3e0c05 100644
+--- a/package/src/nrc/nrc-build-config.h
++++ b/package/src/nrc/nrc-build-config.h
+@@ -67,7 +67,11 @@
+ /*
+  * #define NRC_TARGET_KERNEL_VERSION KERNEL_VERSION(4, 4, 1)
+  */
++#ifdef MAC80211_BACKPORT_VERSION_CODE
++#define NRC_TARGET_KERNEL_VERSION MAC80211_BACKPORT_VERSION_CODE
++#else
+ #define NRC_TARGET_KERNEL_VERSION LINUX_VERSION_CODE
++#endif
+ 
+ /*
+  * On kernel version 6.0 or higher, the dynamic ps became impossible.
+-- 
+2.34.1
+
