@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sterling-lwb5plus-firmware
-PKG_VERSION:=10.4.0.10
+PKG_VERSION:=12.103.0.5
 PKG_RELEASE:=1
 
-PKG_SOURCE:=laird-lwb5plus-sdio-sa-firmware-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=https://github.com/LairdCP/Sterling-LWB-and-LWB5-Release-Packages/releases/download/LRD-REL-$(PKG_VERSION)
-PKG_HASH:=ef505e90641a28454d24b3a7b8c778db95ac658fd90c803dcda06c95f6f50625
+PKG_SOURCE:=summit-lwb5plus-sdio-sa-firmware-$(PKG_VERSION).tar.bz2
+PKG_SOURCE_URL:=https://github.com/Ezurio/SonaIF-Release-Packages/releases/download/LRD-REL-$(PKG_VERSION)
+PKG_HASH:=ffd17719091cf4d9b5fc3c03ae144dee87c2d7ff76b68a0d0662ff13f8438bb8
 
 PKG_MAINTAINER:=Tim Harvey <tharvey@gateworks.com>
 
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/sterling-lwb5plus-firmware-default
   SECTION:=firmware
   CATEGORY:=Firmware
-  URL:=https://www.lairdconnect.com/wireless-modules/wifi-modules-bluetooth/sterling-lwb5-plus-wifi-5-bluetooth-5-module
+  URL:=https://www.ezurio.com/wireless-modules/wifi-modules-bluetooth/sterling-lwb5-plus-wifi-5-bluetooth-5-module
 endef
 
 define Build/Prepare
