@@ -38,14 +38,10 @@ function hardware_status()
 		current_temp = tonumber((
 			luci.sys.exec("cat /sys/class/hwmon/" .. gsc_dev .. "/temp1_input") or
 			""))
-		current_vin = tonumber((
-			luci.sys.exec("cat /sys/class/hwmon/" .. gsc_dev .. "/in0_input") or
-			""))
 	end
 
 	local rv = {
 		temp       = current_temp,
-		vin        = current_vin,
 		input_volt = input_v,
 		input_name = input_v_name
 	}
