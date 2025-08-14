@@ -1,0 +1,57 @@
+From 4485979637731e0650d9949414d9f91f4c79bc58 Mon Sep 17 00:00:00 2001
+From: Tim Harvey <tharvey@gateworks.com>
+Date: Wed, 11 Jun 2025 11:59:42 -0700
+Subject: [PATCH 1/2] fix compiler warnings
+
+Fix various compiler warnings that turn to build failures when compiled with
+-Werror.
+
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ debug.h    | 2 +-
+ firmware.c | 2 +-
+ firmware.h | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/debug.h b/debug.h
+index 353d2d9..97b84a1 100644
+--- a/debug.h
++++ b/debug.h
+@@ -165,7 +165,7 @@ extern uint debug_mask;
+  *
+  * @returns	True if output would be generated and false otherwise.
+  */
+-bool morse_log_is_enabled(u32 id, u8 level);
++bool morse_log_is_enabled(enum morse_feature_id id, u8 level);
+ 
+ /**
+  * Set the default logging level for all features.
+diff --git a/firmware.c b/firmware.c
+index 9e5a65f..9d14171 100644
+--- a/firmware.c
++++ b/firmware.c
+@@ -870,7 +870,7 @@ static uint32_t binary_crc(const struct firmware *fw)
+ 	return ~crc32_le(~0, (unsigned char const *)fw->data, fw->size) & 0xffffffff;
+ }
+ 
+-int morse_firmware_init(struct morse *mors, enum morse_config_test_mode test_mode)
++int morse_firmware_init(struct morse *mors, int test_mode)
+ {
+ 	int n;
+ 	int ret = 0;
+diff --git a/firmware.h b/firmware.h
+index 47c35a8..b2751ad 100644
+--- a/firmware.h
++++ b/firmware.h
+@@ -144,7 +144,7 @@ struct extended_host_table {
+ 	u8 ext_host_table_data_tlvs[];
+ } __packed;
+ 
+-int morse_firmware_init(struct morse *mors, uint test_mode);
++int morse_firmware_init(struct morse *mors, int test_mode);
+ 
+ /**
+  * @brief Perform non-destructive-reset of the chip,
+-- 
+2.34.1
+
