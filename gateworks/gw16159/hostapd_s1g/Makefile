@@ -10,13 +10,13 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=hostapd_s1g
 PKG_RELEASE=2
 
-PKG_VERSION:=1.14.1
+PKG_VERSION:=1.12.4
 
 PKG_LICENSE:=BSD-3-Clause
 
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/MorseMicro/hostap.git
-PKG_HASH:=2e06594bf51db31556a9efc8ffbee11181777de05aeba7414a1e70d7be2dfddb
+PKG_MIRROR_HASH:=2f6894e40c7105b23530cd9559bd836d29f23ffb87cbbaa614eb2361667e55a0
 PKG_SOURCE_PROTO:=git
 
 PKG_MAINTAINER:=Morse Micro <info@morsemicro.com>
