@@ -10,13 +10,13 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=wpa_supplicant_s1g
 PKG_RELEASE=2
 
-PKG_VERSION:=1.14.1
+PKG_VERSION:=1.12.4
 
 PKG_LICENSE:=BSD-3-Clause
 
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/MorseMicro/hostap.git
-PKG_HASH:=5ad24b655857051690dcab437377efbdfcfeb82c185dc7e36b3bc905554b3da8
+PKG_MIRROR_HASH:=4c433f20f52827ee7332943125784fd5824cb84f9310b1b8ebb0a3b2adf651b2
 PKG_SOURCE_PROTO:=git
 
 PKG_MAINTAINER:=Morse Micro <info@morsemicro.com>
