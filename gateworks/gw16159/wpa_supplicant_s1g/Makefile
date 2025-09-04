@@ -169,7 +169,7 @@ define Build/Compile
 	+$(call Build/RunMake,wpa_supplicant, \
 		wpa_supplicant_s1g wpa_cli_s1g \
 	)
-	+$(call Build/RunMake,wpa_supplicant, libwpa_client_s1g.so)
+	+$(call Build/RunMake,wpa_supplicant, libwpa_client.so)
 endef
 
 define Package/wpa_supplicant_s1g/install
@@ -185,13 +185,13 @@ endef
 
 define Package/libwpa_client_s1g/install
 	$(INSTALL_DIR) $(1)/usr/lib/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/wpa_supplicant/libwpa_client_s1g.so $(1)/usr/lib/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/wpa_supplicant/libwpa_client.so $(1)/usr/lib/
 endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/include/
-	$(CP) $(PKG_BUILD_DIR)/wpa_supplicant/libwpa_client_s1g.so		$(1)/usr/lib/
+	$(CP) $(PKG_BUILD_DIR)/wpa_supplicant/libwpa_client.so			$(1)/usr/lib/
 	$(CP) $(PKG_BUILD_DIR)/src/common/wpa_ctrl.h				$(1)/usr/include/wpa_ctrl.h
 endef
 
