@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index 977d4c0..2397737 100644
+--- a/Makefile
++++ b/Makefile
+@@ -26,7 +26,7 @@ Q = @
+ endif
+ 
+ 
+-override MORSECTRL_VERSION_STRING = "rel_1_12_5_2024_Jul_25-4-g3541610"
++#override MORSECTRL_VERSION_STRING = "rel_1_12_5_2024_Jul_25-4-g3541610"
+ DEFAULT_INTERFACE_NAME ?= "wlan0"
+ 
+ MORSECTRL_CFLAGS = $(CFLAGS)
