@@ -7,9 +7,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=morse_driver
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
-PKG_VERSION:=v1.12.4.gateworks
+PKG_VERSION:=v1.12.4-gateworks
 PKG_LICENSE:=GPLv2
 PKG_LICENSE_FILES:=LICENSE
 PKG_SOURCE_URL:=https://github.com/Gateworks/morse_driver.git
@@ -24,8 +24,7 @@ include $(INCLUDE_DIR)/package.mk
 
 # Extract mac80211 version
 MAC80211_VERSION:=$(shell grep '^PKG_VERSION:=' $(TOPDIR)/package/kernel/mac80211/Makefile | cut -d'=' -f2)
-MAC80211_VERSION_CODE=$(shell echo "$(MAC80211_VERSION)" | \
-		      awk -F[v.-] '// {printf("%u", lshift($$2, 16) + lshift($$3, 8) + $$4)}')
+MORSE_VERSION:=$(PKG_VERSION)-g$(call version_abbrev,$(PKG_SOURCE_VERSION))
 
 define KernelPackage/morse
   SUBMENU:=Wireless Drivers
@@ -47,8 +46,9 @@ define KernelPackage/morse/description
 endef
 
 MORSE_MAKEDEFS += \
-  MORSE_VERSION="$(PKG_VERSION)" \
+  MORSE_VERSION="$(MORSE_VERSION)" \
   KERNEL_SRC=$(LINUX_DIR) \
+  CONFIG_BACKPORT_VERSION=$(MAC80211_VERSION) \
   CONFIG_MORSE_SDIO=y \
   CONFIG_MORSE_SDIO_ALIGNMENT=4 \
   CONFIG_MORSE_USER_ACCESS=y \
@@ -64,7 +64,6 @@ NOSTDINC_FLAGS = \
 	-I$(STAGING_DIR)/usr/include/mac80211-backport \
 	-I$(STAGING_DIR)/usr/include/mac80211/uapi \
 	-I$(STAGING_DIR)/usr/include/mac80211 \
-	-DMAC80211_BACKPORT_VERSION_CODE=$(MAC80211_VERSION_CODE) \
 	-include backport/autoconf.h \
 	-include backport/backport.h
 
