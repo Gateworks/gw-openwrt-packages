@@ -10,13 +10,13 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=wpa_supplicant_s1g
 PKG_RELEASE=2
 
-PKG_VERSION:=1.12.4
+PKG_VERSION:=1.16.4
 
 PKG_LICENSE:=BSD-3-Clause
 
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/MorseMicro/hostap.git
-PKG_MIRROR_HASH:=4c433f20f52827ee7332943125784fd5824cb84f9310b1b8ebb0a3b2adf651b2
+PKG_MIRROR_HASH:=1141c428e31a438f44bc6427fc6bfd6de39f22b76944d92dde230e39bc5de15c
 PKG_SOURCE_PROTO:=git
 
 PKG_MAINTAINER:=Morse Micro <info@morsemicro.com>
@@ -169,13 +169,13 @@ define Build/Compile
 	+$(call Build/RunMake,wpa_supplicant, \
 		wpa_supplicant_s1g wpa_cli_s1g \
 	)
-	+$(call Build/RunMake,wpa_supplicant, libwpa_client.so)
+	+$(call Build/RunMake,wpa_supplicant, libwpa_client_s1g.so)
 endef
 
 define Package/wpa_supplicant_s1g/install
-	$(INSTALL_DIR) $(1)/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/wpa_supplicant/wpa_supplicant_s1g $(1)/sbin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/wpa_supplicant/wpa_cli_s1g $(1)/sbin/
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/wpa_supplicant/wpa_supplicant_s1g $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/wpa_supplicant/wpa_cli_s1g $(1)/usr/sbin/
 
 ifeq ($(CONFIG_MORSE_WPA_SUPPLICANT_S1G_DBUS),y)
 	$(INSTALL_DIR) $(1)/etc/dbus-1/system.d/
@@ -185,13 +185,13 @@ endef
 
 define Package/libwpa_client_s1g/install
 	$(INSTALL_DIR) $(1)/usr/lib/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/wpa_supplicant/libwpa_client.so $(1)/usr/lib/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/wpa_supplicant/libwpa_client_s1g.so $(1)/usr/lib/
 endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/include/
-	$(CP) $(PKG_BUILD_DIR)/wpa_supplicant/libwpa_client.so			$(1)/usr/lib/
+	$(CP) $(PKG_BUILD_DIR)/wpa_supplicant/libwpa_client_s1g.so		$(1)/usr/lib/
 	$(CP) $(PKG_BUILD_DIR)/src/common/wpa_ctrl.h				$(1)/usr/include/wpa_ctrl.h
 endef
 
