@@ -9,35 +9,33 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=morse_driver
 PKG_RELEASE:=2
 
-PKG_VERSION:=v1.12.4-gateworks
+PKG_VERSION:=1.16.4-gateworks
 PKG_LICENSE:=GPLv2
 PKG_LICENSE_FILES:=LICENSE
 PKG_SOURCE_URL:=https://github.com/Gateworks/morse_driver.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=3d8514020647e9e0ada438afd8f73f15ab5d6530
-PKG_MIRROR_HASH:=561b619d7170f874a068ec615beec290494c13d15849e683af39fe6fc471ecfa
+PKG_SOURCE_VERSION:=dec5bc215b881c369ff530c440c212ec6dd13183
+PKG_MIRROR_HASH:=9701cce64cd9442b6a535a0690dd46d628467464a1d567d61d7c9a7a3d65be8c
 
-PKG_FLAGS:=nonshared
+PKG_MAINTAINER:=Gateworks
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/kernel.mk
 include $(INCLUDE_DIR)/package.mk
 
 # Extract mac80211 version
-MAC80211_VERSION:=$(shell grep '^PKG_VERSION:=' $(TOPDIR)/package/kernel/mac80211/Makefile | cut -d'=' -f2)
+MAC80211_VERSION:=v$(shell grep '^PKG_VERSION:=' $(TOPDIR)/package/kernel/mac80211/Makefile | cut -d'=' -f2 | head -1)
 MORSE_VERSION:=$(PKG_VERSION)-g$(call version_abbrev,$(PKG_SOURCE_VERSION))
 
 define KernelPackage/morse
   SUBMENU:=Wireless Drivers
   TITLE:=Morse Micro WIFI HaLow driver
-  DEPENDS:= +kmod-mmc +kmod-mac80211
+  DEPENDS:= +kmod-mmc +kmod-mac80211 +kmod-lib-crc7 +kmod-usb-core
   FILES:=\
     $(PKG_BUILD_DIR)/morse.ko \
     $(PKG_BUILD_DIR)/dot11ah/dot11ah.ko
   AUTOLOAD:=$(call AutoProbe,morse)
-  MODPARAMS.morse := \
-		country=US \
-		enable_ext_xtal_init=1 \
-		bcf=bcf_sxsdmah_fem5p0.bin
+  MODPARAMS.morse:=country=US enable_ext_xtal_init=1
   PROVIDES:=kmod-morse
 endef
 
@@ -49,12 +47,15 @@ MORSE_MAKEDEFS += \
   MORSE_VERSION="$(MORSE_VERSION)" \
   KERNEL_SRC=$(LINUX_DIR) \
   CONFIG_BACKPORT_VERSION=$(MAC80211_VERSION) \
+  CONFIG_MORSE_USB=y \
   CONFIG_MORSE_SDIO=y \
   CONFIG_MORSE_SDIO_ALIGNMENT=4 \
   CONFIG_MORSE_USER_ACCESS=y \
   CONFIG_MORSE_POWERSAVE_MODE=0 \
   CONFIG_MORSE_VENDOR_COMMAND=y \
   CONFIG_MORSE_RC=y \
+  CONFIG_MORSE_MONITOR=y \
+  CONFIG_MORSE_DEBUGFS=y \
   CONFIG_MORSE_COUNTRY=US \
   CONFIG_WLAN_VENDOR_MORSE=m
 
