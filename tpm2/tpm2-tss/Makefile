@@ -22,7 +22,7 @@ define Package/$(PKG_NAME)
   SUBMENU:=TPM2
   TITLE:=TPM2-TSS
   URL:=https://github.com/tpm2-software/tpm2-tss
-  DEPENDS:= +libusb-1.0 +libusb-compat +libftdi +libopenssl
+  DEPENDS:= +libusb-1.0 +libusb-compat +libftdi1 +libopenssl
 endef
 
 TARGET_CFLAGS:= -U_FORTIFY_SOURCE $(TARGET_OPTIMIZATION)$(if $(CONFIG_DEBUG), -g3) $(EXTRA_OPTIMIZATION)
