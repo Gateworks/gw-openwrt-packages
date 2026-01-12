@@ -1,7 +1,7 @@
-From 576db067091d040c925d92c811310e7564e5a1f2 Mon Sep 17 00:00:00 2001
+From e3bc047db3d95cec59f7f23994b32705fb8f4fbe Mon Sep 17 00:00:00 2001
 From: Tim Harvey <tharvey@gateworks.com>
-Date: Fri, 1 Mar 2024 10:34:56 -0800
-Subject: [PATCH 1/4] nrc: fix build issue for openwrt
+Date: Tue, 20 Jan 2026 11:35:29 -0800
+Subject: nrc: fix build issue for openwrt
 
 Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 ---
@@ -13,7 +13,7 @@ Signed-off-by: Tim Harvey <tharvey@gateworks.com>
  5 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/package/src/nrc/Makefile b/package/src/nrc/Makefile
-index aebf479..5df9e34 100644
+index bd11635..8732938 100644
 --- a/package/src/nrc/Makefile
 +++ b/package/src/nrc/Makefile
 @@ -2,7 +2,7 @@
@@ -23,10 +23,10 @@ index aebf479..5df9e34 100644
 -include $(KDIR)/.config
 +#include $(KDIR)/.config
  
- M_SRC = nrc
+ NRC_VERSION ?= "v1.5.1-g$(shell git rev-parse --verify HEAD 2>/dev/null | cut -c1-12)"
  
 diff --git a/package/src/nrc/nrc-mac80211.c b/package/src/nrc/nrc-mac80211.c
-index c215e03..2bdebee 100644
+index e44d659..39fbcf2 100644
 --- a/package/src/nrc/nrc-mac80211.c
 +++ b/package/src/nrc/nrc-mac80211.c
 @@ -39,6 +39,7 @@
@@ -50,7 +50,7 @@ index cf05098..8f46da8 100644
  #include "nrc-mac80211.h"
  #include "nrc-netlink.h"
 diff --git a/package/src/nrc/nrc-pm.c b/package/src/nrc/nrc-pm.c
-index cb4aa49..f30b87b 100644
+index a0531fe..9ea0afa 100644
 --- a/package/src/nrc/nrc-pm.c
 +++ b/package/src/nrc/nrc-pm.c
 @@ -29,6 +29,7 @@

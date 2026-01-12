@@ -16,7 +16,7 @@ PKG_LICENSE:=BSD-3-Clause
 
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/MorseMicro/hostap.git
-PKG_MIRROR_HASH:=0d742dbba4f1ceeb4617522460966de0c72a32c6522d0780d8e4d9599112edb8
+PKG_MIRROR_HASH:=781e5977f6203a5881f1e5877d2426c7952700ec8a1c3ba7d5b8e328ff00b56e
 PKG_SOURCE_PROTO:=git
 
 PKG_MAINTAINER:=Morse Micro <info@morsemicro.com>
@@ -137,6 +137,7 @@ TARGET_CPPFLAGS := \
 	-DCONFIG_LIBNL20 \
 	-D_GNU_SOURCE
 
+TARGET_CFLAGS += -Wno-error=deprecated-declarations
 TARGET_LDFLAGS += -lnl-3 -lnl-genl-3 -lnl-route-3
 TARGET_LDFLAGS += -lm -lpthread -lcrypto -lssl
 

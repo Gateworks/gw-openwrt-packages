@@ -1,7 +1,7 @@
-From 3ea6681dd0cff847cebfda05c0016710b2393986 Mon Sep 17 00:00:00 2001
+From 95ad1bc11d474458f177907923450a0f2edbf022 Mon Sep 17 00:00:00 2001
 From: Tim Harvey <tharvey@gateworks.com>
-Date: Mon, 4 Mar 2024 11:57:53 -0800
-Subject: [PATCH 2/4] nrc-init: set defaults appropriate for GW16146
+Date: Tue, 20 Jan 2026 11:36:06 -0800
+Subject: nrc-init: set defaults appropriate for GW16146
 
 Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 ---
@@ -9,10 +9,10 @@ Signed-off-by: Tim Harvey <tharvey@gateworks.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/package/src/nrc/nrc-init.c b/package/src/nrc/nrc-init.c
-index 7d567c6..ab2dbfb 100644
+index 2a9ac8d..1d47691 100644
 --- a/package/src/nrc/nrc-init.c
 +++ b/package/src/nrc/nrc-init.c
-@@ -37,12 +37,12 @@
+@@ -38,12 +38,12 @@
  #include "nrc-bd.h"
  #endif /* defined(CONFIG_SUPPORT_BD) */
  
@@ -27,7 +27,7 @@ index 7d567c6..ab2dbfb 100644
  module_param(bd_name, charp, 0600);
  MODULE_PARM_DESC(bd_name, "Board Data file name");
  #endif /* defined(CONFIG_SUPPORT_BD) */
-@@ -89,7 +89,7 @@ int spi_gpio_irq = TARGET_GPIO_SPI_IRQ;
+@@ -90,7 +90,7 @@ int spi_gpio_irq = TARGET_GPIO_SPI_IRQ;
  module_param(spi_gpio_irq, int, 0600);
  MODULE_PARM_DESC(spi_gpio_irq, "SPI gpio irq");
  
