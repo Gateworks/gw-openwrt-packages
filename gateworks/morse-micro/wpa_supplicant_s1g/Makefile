@@ -8,18 +8,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wpa_supplicant_s1g
-PKG_RELEASE=2
+PKG_RELEASE=1
 
-PKG_VERSION:=1.16.4
+PKG_VERSION:=2.0.0
 
 PKG_LICENSE:=BSD-3-Clause
 
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_VERSION:=mm8108-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/MorseMicro/hostap.git
-PKG_MIRROR_HASH:=6bcc315e04ea73f2128ed018e5ed535c5794fc0e2fc9f179adce3a035b6a3f19
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.zst
+PKG_MIRROR_HASH:=247260b6a910b9cbd085eefe1bb9f0419e3a6f2366b4a90987113c208b4b7803
 PKG_SOURCE_PROTO:=git
 
-PKG_MAINTAINER:=Morse Micro <info@morsemicro.com>
+PKG_MAINTAINER:=Gateworks Corporation <support@gateworks.com>
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -105,7 +106,7 @@ define Package/wpa_supplicant_s1g
   CATEGORY:=Network
   SUBMENU:=WirelessAPD
   TITLE:=Morse Micro HaLow wpa_supplicant
-  DEPENDS:= +kmod-morse +libnl +libopenssl +libubus +MORSE_WPA_SUPPLICANT_S1G_DBUS:dbus +MORSE_WPA_SUPPLICANT_S1G_DBUS:libdbus
+  DEPENDS:= +kmod-dot11ah +libnl +libopenssl +libubus +MORSE_WPA_SUPPLICANT_S1G_DBUS:dbus +MORSE_WPA_SUPPLICANT_S1G_DBUS:libdbus
   USERID:=network=101:network=101
   PROVIDES:=wpa_supplicant_s1g
 endef
