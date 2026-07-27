@@ -2,12 +2,13 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=ftdi-usb-spi
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_VERSION=1.0
 PKG_SOURCE_URL:=https://github.com/gateworks/ftdi-usb-spi
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=3c1df20fa8c15340084ef60b480bcfe7ed60251a
+PKG_SOURCE_VERSION:=ce3f24bafffa31c41509a2d005058fa6e2ed579a
+PKG_MIRROR_HASH:=50380d502927e8e4200fefe55c3191c1818ba0a4cadc215c2d7e1943cc71da4b
 
 include $(INCLUDE_DIR)/package.mk
 
