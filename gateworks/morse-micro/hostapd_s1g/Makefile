@@ -8,22 +8,22 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=hostapd_s1g
-PKG_RELEASE=2
+PKG_RELEASE=1
 
-PKG_VERSION:=1.16.4
+PKG_VERSION:=2.0.0
 
 PKG_LICENSE:=BSD-3-Clause
 
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_VERSION:=mm8108-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/MorseMicro/hostap.git
-PKG_MIRROR_HASH:=0d742dbba4f1ceeb4617522460966de0c72a32c6522d0780d8e4d9599112edb8
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.zst
+PKG_MIRROR_HASH:=ea3e6b053e3222094e1f3842af85e60fc0a0a0a6647d9637e96d7f7f14d6348f
 PKG_SOURCE_PROTO:=git
 
-PKG_MAINTAINER:=Morse Micro <info@morsemicro.com>
+PKG_MAINTAINER:=Gateworks Corporation <support@gateworks.com>
 PKG_BUILD_PARALLEL:=1
 
 PKG_CONFIG_DEPENDS:= \
-	CONFIG_PACKAGE_kmod-morse \
 	CONFIG_PACKAGE_kmod-cfg80211 \
 	CONFIG_PACKAGE_hostapd \
 	CONFIG_PACKAGE_hostapd-basic \
@@ -104,7 +104,7 @@ define Package/hostapd_s1g
   CATEGORY:=Network
   SUBMENU:=WirelessAPD
   TITLE:=Morse Micro HaLow hostapd
-  DEPENDS:= +kmod-morse +libnl +libopenssl +libubus
+  DEPENDS:= +kmod-dot11ah +libnl +libopenssl +libubus
   USERID:=network=101:network=101
   PROVIDES:=hostapd_s1g
 endef
